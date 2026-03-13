@@ -1,22 +1,20 @@
-# Sztuka logowania w systemach embedded — kod
+<img src="doc/Cover.jpg" width=420 align="right">
+
+### Sztuka logowania w systemach embedded
 
 To repozytorium zawiera **kod źródłowy oraz materiały pomocnicze**
 do książki **„Sztuka logowania w systemach embedded”**.
 
----
+### 📦 Zawartość repozytorium
 
-## 📦 Zawartość repozytorium
-
-### 📘 `docs/embedded_logging_art.pdf`
+#### 📘 `doc/embedded_logging_art.pdf`
 
 Dostępny jest **roboczy fragment książki (~55 stron)**  
 poświęconej logowaniu w systemach embedded.
 
 Dokument jest **w trakcie pisania** i będzie stopniowo rozbudowywany
 
----
-
-### 🧠 `CANSim/`
+#### 🧠 `CANSim/`
 
 Minimalny symulator systemu embedded w **C++**, wykorzystywany w książce
 do demonstracji zagadnień projektowych:
@@ -27,9 +25,7 @@ do demonstracji zagadnień projektowych:
 - zadania i scenariusze testowe,
 - przykłady omawiane w treści książki.
 
----
-
-### 🛠 `tools/log_parser.py`
+#### 🛠 `tools/log_parser.py`
 
 Lekki parser logów w formacie **JSONL**, napisany w Pythonie:
 
@@ -37,9 +33,7 @@ Lekki parser logów w formacie **JSONL**, napisany w Pythonie:
 - ekstrakcja wpisów narracyjnych,
 - eksport do CSV w celu dalszej analizy.
 
----
-
-## ▶️ Budowanie
+#### ▶️ Budowanie
 
 Projekt korzysta z **CMake**. Aby zbudować symulator `CANSim`:
 
@@ -49,3 +43,4 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
+```
