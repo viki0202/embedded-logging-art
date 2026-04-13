@@ -31,11 +31,11 @@ int main() {
     ctx.diag     = &diag;   
 
     Scheduler sch(ctx);
-    sch.addTask<CanTxTask>();
-    sch.addTask<CanRxTask>();
-    sch.addTask<HousekeepingTask>();
-    sch.addTask<LogStormTask>();       
-    sch.addTask<SafetyMonitorTask>();
+    sch.addTask(std::make_unique<CanTxTask>());
+    sch.addTask(std::make_unique<CanRxTask>());
+    sch.addTask(std::make_unique<HousekeepingTask>());
+    sch.addTask(std::make_unique<LogStormTask>());       
+    sch.addTask(std::make_unique<SafetyMonitorTask>());
 
 
     LOGI("Main","Boot", ctx.corr_id, "boot#1",
