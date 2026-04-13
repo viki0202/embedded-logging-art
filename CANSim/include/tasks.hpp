@@ -4,30 +4,35 @@
 class CanTxTask : public Task {
     size_t step{0};
     uint32_t counter{0};
+    std::string name() const override { return "CanTx"; }
 public:
-    void tick(TickContext& ctx) override;
+    bool tick(TickContext& ctx) override;
 };
 
 class CanRxTask : public Task {
+    std::string name() const override { return "CanRx"; }
 public:
-    void tick(TickContext& ctx) override;
+    bool tick(TickContext& ctx) override;
 };
 
 class HousekeepingTask : public Task {
     size_t beat{0};
+    std::string name() const override { return "Housekeeping"; }
 public:
-    void tick(TickContext& ctx) override;
+    bool tick(TickContext& ctx) override;
 };
 
 class SafetyMonitorTask : public Task {
     size_t tickCount{0};
     const size_t expectedCycle = 3;
+    std::string name() const override { return "SafetyMonitor"; }
 public:
-    void tick(TickContext& ctx) override;
+    bool tick(TickContext& ctx) override;
 };
 
 class LogStormTask : public Task {
     size_t counter{0};
+    std::string name() const override { return "LogStorm"; }
 public:
-    void tick(TickContext& ctx) override;
+    bool tick(TickContext& ctx) override;
 };

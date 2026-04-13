@@ -7,7 +7,7 @@
 #define LOG_LEVEL_DEBUG 3
 
 #ifndef LOG_LEVEL_MIN
-#define LOG_LEVEL_MIN LOG_LEVEL_INFO
+#define LOG_LEVEL_MIN LOG_LEVEL_DEBUG
 #endif
 
 #include <cstdarg>

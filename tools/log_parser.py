@@ -16,10 +16,10 @@ if sys.stdin.encoding is None or 'utf' not in sys.stdin.encoding.lower():
 RESET = "\x1b[0m"
 
 LEVEL_COLORS = {
-    "DEBUG": "\x1b[38;2;120;120;120m",   # gray
-    "INFO":  "\x1b[38;2;90;140;220m",    # blue
-    "WARN":  "\x1b[38;2;200;160;40m",    # mustard
-    "ERROR": "\x1b[38;2;220;70;70m",     # red
+    "DEBUG": "\x1b[38;2;120;120;120m",   # szary
+    "INFO":  "\x1b[38;2;90;140;220m",    # spokojny niebieski
+    "WARN":  "\x1b[38;2;200;160;40m",    # musztardowy
+    "ERROR": "\x1b[38;2;220;70;70m",     # czerwony
 }
 
 NAMED_FG = {
@@ -29,6 +29,7 @@ NAMED_FG = {
     "bright_black": "\x1b[90m", "bright_red": "\x1b[91m", "bright_green": "\x1b[92m",
     "bright_yellow": "\x1b[93m", "bright_blue": "\x1b[94m", "bright_magenta": "\x1b[95m",
     "bright_cyan": "\x1b[96m", "bright_white": "\x1b[97m",
+    "brown": "\x1b[38;5;172m", "darkbrown": "\x1b[38;5;130m",
 }
 
 def rgb_fg(r, g, b):  
@@ -94,6 +95,8 @@ def parse_args():
                          "Obsługiwane aliasy CAN-ID: canid|can_id|id."))
     p.add_argument("--keyword", action="append",
                    help='Podświetl słowa/wyrażenia, np. --keyword "timeout:yellow" (można wiele razy).')
+    p.add_argument("--preset", choices=["sched", "timeline", "narrative"],
+                   help="Gotowe presety wyświetlania logów.")
     return p.parse_args()
 
 def load_entries(path):
@@ -201,6 +204,14 @@ def colorize_parts(entry, fields, separator, keyword_map, use_color, color_by_li
 
     return separator.join(parts)
 
+def sort_key_sched(e):
+    ts = e.get("ts", "")
+    try:
+        dt = datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S.%f")
+        return dt.timestamp()
+    except Exception:
+        return 0
+
 def main():
     args = parse_args()
 
@@ -208,6 +219,19 @@ def main():
         sys.stdout.reconfigure(encoding=args.output_encoding)
     except Exception:
         pass
+
+    if args.preset == "sched":
+        args.actor = (args.actor or []) + ["SCHED"]
+        args.fields = "ts,action,narrative,details"
+        args.separator = "  \u2192  "  # "  →  "
+        args.keyword = (args.keyword or []) + [
+            "RunTask:green",
+            "SkipTask:yellow",
+            "Idle:bright_black",
+            "QuantumEnd:cyan",
+            "{ TickBegin:brown",
+            "} TickEnd:darkbrown",
+        ]
 
     is_tty = hasattr(sys.stdout, "isatty") and sys.stdout.isatty()
     use_color = (args.color == "always") or (args.color == "auto" and is_tty)
@@ -232,7 +256,10 @@ def main():
         filtered.append(e)
 
     if not args.no_sort:
-        filtered.sort(key=lambda x: x.get("ts", ""))
+        if args.preset == "sched":
+            filtered.sort(key=sort_key_sched)
+        else:
+            filtered.sort(key=lambda x: x.get("ts", ""))
 
     keyword_map = parse_color_keywords(args)
     color_by_list = [s.strip() for s in args.color_by.split(",") if s.strip()]
