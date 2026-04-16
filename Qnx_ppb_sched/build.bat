@@ -1,0 +1,1 @@
+g++ main.c jobs.c scheduler.c logger.cpp utils.cpp -o main.exe -lpthread -std=c++17 -g -O0 -Wall
